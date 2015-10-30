@@ -59,7 +59,7 @@ public class RecyclerGridFragment extends Fragment implements OnStartDragListene
         final GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), spanCount);
         recyclerView.setLayoutManager(layoutManager);
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(getActivity(), adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }

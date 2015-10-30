@@ -56,7 +56,7 @@ public class RecyclerListFragment extends Fragment implements OnStartDragListene
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(getActivity(), adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }

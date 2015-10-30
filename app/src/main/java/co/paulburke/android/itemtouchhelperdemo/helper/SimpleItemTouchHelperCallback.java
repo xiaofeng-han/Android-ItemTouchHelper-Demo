@@ -16,10 +16,15 @@
 
 package co.paulburke.android.itemtouchhelperdemo.helper;
 
+import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+
+import co.paulburke.android.itemtouchhelperdemo.R;
 
 /**
  * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and
@@ -36,9 +41,13 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public static final float ALPHA_FULL = 1.0f;
 
     private final ItemTouchHelperAdapter mAdapter;
+    private final Paint drawPaint = new Paint();
 
-    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
+    public SimpleItemTouchHelperCallback(Context context, ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
+        drawPaint.setColor(context.getResources().getColor(R.color.error_color));
+        drawPaint.setStrokeWidth(2);
+        drawPaint.setStyle(Paint.Style.STROKE);
     }
 
     @Override
@@ -89,8 +98,17 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
             viewHolder.itemView.setAlpha(alpha);
             viewHolder.itemView.setTranslationX(dX);
+            if (isCurrentlyActive) {
+                c.drawRect(dX - 5, viewHolder.itemView.getTop() + dY - 5, viewHolder.itemView.getMeasuredWidth() + 5, viewHolder.itemView.getTop() + viewHolder.itemView.getMeasuredHeight() + dY + 5, drawPaint);
+            }
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                if (isCurrentlyActive) {
+                    c.drawRect(0, viewHolder.itemView.getTop() + dY - 5, viewHolder.itemView.getMeasuredWidth(), viewHolder.itemView.getTop() + viewHolder.itemView.getMeasuredHeight() + dY + 5, drawPaint);
+                }
+            }
+
         }
     }
 
@@ -119,5 +137,10 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
             itemViewHolder.onItemClear();
         }
+    }
+
+    @Override
+    public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 }
